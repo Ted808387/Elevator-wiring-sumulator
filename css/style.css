@@ -129,7 +129,7 @@ button { color: inherit; }
 }
 
 .wiring-board {
-  position: relative; width: 1050px; height: 720px; margin: 0 auto; transform-origin: left top;
+  position: relative; width: 1180px; height: 900px; margin: 0 auto; transform-origin: left top;
   overflow: hidden; border: 12px solid #6c747a; border-radius: 8px;
   background:
     radial-gradient(circle at 16px 16px, #879096 0 3px, transparent 4px) 0 0/64px 64px,
@@ -158,7 +158,7 @@ button { color: inherit; }
 .power-terminals { display: flex; justify-content: space-around; padding-top: 13px; }
 .terminal-block.tb1 { left: 165px; top: 18px; width: 300px; height: 98px; }
 .nfb { left: 495px; top: 18px; width: 270px; height: 120px; }
-.terminal-block.tb2 { left: 110px; right: 110px; bottom: 18px; height: 92px; }
+.terminal-block.tb2 { left: 70px; right: 70px; bottom: 18px; height: 92px; }
 .terminal-row { display: flex; justify-content: space-around; gap: 5px; padding: 15px 8px 8px; }
 .terminal-pair { position: absolute; inset: 32px 8px 5px; display: grid; grid-template-columns: repeat(4, 1fr); align-items: end; gap: 6px; }
 .nfb .terminal-pair { left: 78px; top: 38px; right: 8px; bottom: 7px; }
@@ -183,29 +183,40 @@ button { color: inherit; }
 .breaker.on .breaker-handle { transform: translateY(0); background: #ef4444; }
 .breaker b { font-size: 9px; }
 
-.relay-area { position: absolute; left: 42px; right: 42px; top: 174px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.relay-area { position: absolute; left: 32px; right: 32px; top: 164px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
 .relay {
-  position: relative; height: 242px; border: 2px solid #66727a; border-radius: 9px;
+  position: relative; height: 390px; border: 2px solid #66727a; border-radius: 9px;
   background: linear-gradient(135deg, #e7ecee, #bcc7cc); box-shadow: 0 7px 12px rgba(0,0,0,.2);
 }
 .relay::before {
-  content: ""; position: absolute; left: 18px; right: 18px; top: 43px; height: 72px;
+  content: ""; position: absolute; left: 18px; right: 18px; top: 43px; height: 58px;
   border-radius: 7px; background: rgba(41,57,67,.82); box-shadow: inset 0 0 17px #111;
 }
 .relay.active::before { background: #176b54; box-shadow: inset 0 0 17px #0d372e, 0 0 18px rgba(32,185,120,.65); }
 .relay-name { padding: 10px; text-align: center; font-weight: 900; letter-spacing: .08em; }
 .relay-state {
-  position: absolute; z-index: 2; top: 67px; left: 0; right: 0; color: #fff;
+  position: absolute; z-index: 2; top: 61px; left: 0; right: 0; color: #fff;
   text-align: center; font-size: 11px; font-weight: 800;
 }
 .relay-terminal {
   position: absolute;
 }
-.relay-terminal.a1 { left: 22px; top: 130px; }
-.relay-terminal.a2 { right: 22px; top: 130px; }
-.relay-terminal.c { left: 20px; bottom: 23px; }
-.relay-terminal.no { left: calc(50% - 19px); bottom: 23px; }
-.relay-terminal.nc { right: 20px; bottom: 23px; }
+.relay-terminal.a1 { left: 45px; top: 112px; }
+.relay-terminal.a2 { right: 45px; top: 112px; }
+.contact-banks {
+  position: absolute; left: 10px; right: 10px; top: 170px; display: grid;
+  grid-template-columns: 1fr 1fr; gap: 24px 8px;
+}
+.contact-bank {
+  position: relative; height: 78px; padding-top: 2px; border: 1px solid #8b969c;
+  border-radius: 5px; background: rgba(255,255,255,.55);
+}
+.contact-bank-title { text-align: center; font-size: 9px; font-weight: 900; color: #4d5960; }
+.contact-bank .terminal { position: absolute; width: 32px; height: 32px; }
+.contact-bank .terminal span { font-size: 8px; }
+.contact-bank .c { left: 7px; bottom: 15px; }
+.contact-bank .no { left: calc(50% - 16px); bottom: 15px; }
+.contact-bank .nc { right: 7px; bottom: 15px; }
 
 .input-area { position: absolute; left: 82px; right: 82px; bottom: 126px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
 .input-unit {
