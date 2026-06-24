@@ -4,6 +4,12 @@
 
 專案目標是在手機與電腦瀏覽器中，提供容易操作的虛擬接線板，讓使用者可以認識元件、練習配線邏輯、操作開關及測試電驛狀態。
 
+## 線上使用
+
+GitHub Pages：
+
+<https://ted808387.github.io/Elevator-wiring-sumulator/>
+
 ## 目前功能
 
 - 支援電氣配線 A～D 題型
