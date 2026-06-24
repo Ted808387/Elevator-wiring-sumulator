@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="06400 升降機裝修丙級電氣配線作業互動練習模擬器"
+    />
+    <title>06400 升降機裝修丙級｜電氣配線模擬器</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">64</span>
+        <div>
+          <strong>06400 電氣配線模擬器</strong>
+          <small>升降機裝修丙級｜瀏覽器練習版</small>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span id="saveStatus" class="save-status">已自動儲存</span>
+        <button id="helpButton" class="icon-button" type="button" aria-label="開啟操作說明">?</button>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <section class="control-panel card" aria-label="練習控制">
+        <div class="mode-tabs" role="tablist" aria-label="操作模式">
+          <button class="mode-tab active" data-mode="practice" type="button">練習模式</button>
+          <button class="mode-tab" data-mode="exam" type="button">模擬測驗</button>
+          <button class="mode-tab" data-mode="free" type="button">自由配線</button>
+        </div>
+
+        <div class="question-row">
+          <label for="questionSelect">練習題型</label>
+          <select id="questionSelect">
+            <option value="A">A｜優先選擇電路</option>
+            <option value="B">B｜最新輸入優先電路</option>
+            <option value="C">C｜電驛作動數量檢出</option>
+            <option value="D">D｜二進位轉十進位解碼</option>
+          </select>
+          <div id="timer" class="timer" aria-live="polite">50:00</div>
+        </div>
+
+        <div class="task-summary">
+          <span id="taskBadge" class="task-badge">題型 A</span>
+          <div>
+            <strong id="taskTitle">優先選擇電路 A</strong>
+            <p id="taskDescription"></p>
+          </div>
+        </div>
+
+        <div class="toolbar" aria-label="配線工具">
+          <div class="wire-colors" aria-label="線色">
+            <button class="color-dot active" data-color="#ef4444" style="--wire:#ef4444" aria-label="紅線"></button>
+            <button class="color-dot" data-color="#2563eb" style="--wire:#2563eb" aria-label="藍線"></button>
+            <button class="color-dot" data-color="#111827" style="--wire:#111827" aria-label="黑線"></button>
+            <button class="color-dot" data-color="#eab308" style="--wire:#eab308" aria-label="黃線"></button>
+          </div>
+          <span class="toolbar-divider"></span>
+          <button id="undoButton" class="tool-button" type="button">復原</button>
+          <button id="clearButton" class="tool-button danger" type="button">清除配線</button>
+          <button id="hintButton" class="tool-button" type="button">提示</button>
+          <button id="answerButton" class="tool-button" type="button">參考接線</button>
+          <button id="checkButton" class="tool-button primary" type="button">檢查結果</button>
+        </div>
+      </section>
+
+      <section class="workspace-layout">
+        <div class="board-section card">
+          <div class="board-header">
+            <div>
+              <strong>電氣配線工作板</strong>
+              <span id="connectionCount">0 條導線</span>
+            </div>
+            <div class="power-legend">
+              <span><i class="status-light power"></i>電源</span>
+              <span><i class="status-light relay"></i>電驛吸合</span>
+            </div>
+          </div>
+
+          <div id="boardViewport" class="board-viewport">
+            <div id="wiringBoard" class="wiring-board" aria-label="互動接線板">
+              <svg id="wireLayer" class="wire-layer" aria-hidden="true"></svg>
+
+              <div class="board-component power-block" data-component="POWER">
+                <div class="component-label">控制電源</div>
+                <div class="power-terminals">
+                  <button class="terminal power-terminal" data-terminal="POWER.R" aria-label="電源 R 端子">
+                    <span>R</span>
+                  </button>
+                  <button class="terminal power-terminal" data-terminal="POWER.T" aria-label="電源 T 端子">
+                    <span>T</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="board-component terminal-block tb1">
+                <div class="component-label">TB1 電源端子台</div>
+                <div class="terminal-row">
+                  <button class="terminal" data-terminal="TB1.R1"><span>R1</span></button>
+                  <button class="terminal" data-terminal="TB1.R2"><span>R2</span></button>
+                  <button class="terminal" data-terminal="TB1.T1"><span>T1</span></button>
+                  <button class="terminal" data-terminal="TB1.T2"><span>T2</span></button>
+                </div>
+              </div>
+
+              <div class="board-component nfb" data-component="NFB">
+                <div class="component-label">NFB 無熔絲開關</div>
+                <button id="nfbSwitch" class="breaker" type="button" aria-pressed="false">
+                  <span class="breaker-handle"></span>
+                  <b>OFF</b>
+                </button>
+                <div class="terminal-pair">
+                  <button class="terminal" data-terminal="NFB.RI"><span>R-IN</span></button>
+                  <button class="terminal" data-terminal="NFB.RO"><span>R-OUT</span></button>
+                  <button class="terminal" data-terminal="NFB.TI"><span>T-IN</span></button>
+                  <button class="terminal" data-terminal="NFB.TO"><span>T-OUT</span></button>
+                </div>
+              </div>
+
+              <div id="relayArea" class="relay-area"></div>
+              <div id="inputArea" class="input-area"></div>
+
+              <div class="board-component terminal-block tb2">
+                <div class="component-label">TB2 狀態檢測端子</div>
+                <div class="terminal-row">
+                  <button class="terminal" data-terminal="TB2.0"><span>0</span></button>
+                  <button class="terminal" data-terminal="TB2.1"><span>1</span></button>
+                  <button class="terminal" data-terminal="TB2.2"><span>2</span></button>
+                  <button class="terminal" data-terminal="TB2.3"><span>3</span></button>
+                  <button class="terminal" data-terminal="TB2.4"><span>4</span></button>
+                  <button class="terminal" data-terminal="TB2.5"><span>5</span></button>
+                  <button class="terminal" data-terminal="TB2.6"><span>6</span></button>
+                  <button class="terminal" data-terminal="TB2.7"><span>7</span></button>
+                  <button class="terminal" data-terminal="TB2.8"><span>8</span></button>
+                  <button class="terminal" data-terminal="TB2.9"><span>9</span></button>
+                </div>
+              </div>
+
+              <div id="boardMessage" class="board-message">
+                請先點選一個端子，再點選另一個端子完成接線
+              </div>
+            </div>
+          </div>
+
+          <div class="mobile-board-tools">
+            <button id="zoomOutButton" type="button" aria-label="縮小">−</button>
+            <span id="zoomLabel">100%</span>
+            <button id="zoomInButton" type="button" aria-label="放大">＋</button>
+            <button id="resetViewButton" type="button">重設視圖</button>
+          </div>
+        </div>
+
+        <aside class="guide-panel card">
+          <div class="guide-tabs">
+            <button class="guide-tab active" data-guide="components" type="button">元件說明</button>
+            <button class="guide-tab" data-guide="steps" type="button">練習方式</button>
+            <button class="guide-tab" data-guide="status" type="button">目前狀態</button>
+          </div>
+
+          <div id="componentsGuide" class="guide-content active">
+            <article class="component-guide">
+              <div class="guide-icon nfb-icon">NFB</div>
+              <div><strong>無熔絲開關</strong><p>控制整個工作板電源。完成配線後切到 ON，再測試輸入按鈕。</p></div>
+            </article>
+            <article class="component-guide">
+              <div class="guide-icon relay-icon">X</div>
+              <div><strong>X1～X4 電磁電驛</strong><p>A1、A2 是線圈；C 是共用端，NO 是常開接點，NC 是常閉接點。</p></div>
+            </article>
+            <article class="component-guide">
+              <div class="guide-icon button-icon">PB</div>
+              <div><strong>輸入按鈕 1～4</strong><p>按住時 IN 與 OUT 導通。用來模擬考題中的輸入信號。</p></div>
+            </article>
+            <article class="component-guide">
+              <div class="guide-icon terminal-icon">TB</div>
+              <div><strong>TB1／TB2 端子台</strong><p>TB1 分配控制電源；TB2 用於輸出與電驛狀態檢查。</p></div>
+            </article>
+            <article class="component-guide">
+              <div class="guide-icon wire-icon"></div>
+              <div><strong>導線</strong><p>先選線色，再依序點擊兩個端子。點擊既有導線即可刪除。</p></div>
+            </article>
+          </div>
+
+          <div id="stepsGuide" class="guide-content">
+            <ol class="practice-steps">
+              <li><b>認識元件</b><span>先找出電源、NFB、輸入按鈕、電驛線圈及接點。</span></li>
+              <li><b>閱讀題意</b><span>確認題型要求的是優先控制、數量檢出或解碼。</span></li>
+              <li><b>先接電源</b><span>由 R、T 經過 TB1 與 NFB，建立控制電源。</span></li>
+              <li><b>接控制迴路</b><span>依電路邏輯連接按鈕、線圈、NO 與 NC 接點。</span></li>
+              <li><b>通電測試</b><span>切換 NFB，按下輸入，觀察 X1～X4 是否正確吸合。</span></li>
+              <li><b>檢查修正</b><span>練習模式可逐步提示；測驗模式在最後統一評分。</span></li>
+            </ol>
+            <div class="safety-note">
+              本工具是低風險的邏輯練習，不能取代實體配線訓練與用電安全指導。
+            </div>
+          </div>
+
+          <div id="statusGuide" class="guide-content">
+            <div class="status-grid">
+              <div><span>NFB</span><strong id="nfbStatus">OFF</strong></div>
+              <div><span>已接導線</span><strong id="wireStatus">0</strong></div>
+              <div><span>吸合電驛</span><strong id="relayStatus">無</strong></div>
+              <div><span>按下輸入</span><strong id="inputStatus">無</strong></div>
+            </div>
+            <h3>操作紀錄</h3>
+            <ul id="eventLog" class="event-log">
+              <li>模擬器已就緒</li>
+            </ul>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <div id="resultModal" class="modal" hidden>
+      <div class="modal-backdrop" data-close-modal></div>
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+        <button class="modal-close" data-close-modal type="button" aria-label="關閉">×</button>
+        <div id="resultIcon" class="result-icon">✓</div>
+        <h2 id="resultTitle">檢查結果</h2>
+        <p id="resultSummary"></p>
+        <div id="scoreBlock" class="score-block"></div>
+        <ul id="resultDetails" class="result-details"></ul>
+        <button class="primary large" data-close-modal type="button">繼續練習</button>
+      </section>
+    </div>
+
+    <div id="helpModal" class="modal" hidden>
+      <div class="modal-backdrop" data-close-help></div>
+      <section class="modal-card help-card" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+        <button class="modal-close" data-close-help type="button" aria-label="關閉">×</button>
+        <h2 id="helpTitle">快速操作說明</h2>
+        <div class="help-demo">
+          <span class="demo-terminal">R1</span><i></i><span class="demo-terminal">A1</span>
+        </div>
+        <ol>
+          <li>選擇線色。</li>
+          <li>點一下起點端子，端子會亮起。</li>
+          <li>再點一下終點端子，系統建立導線。</li>
+          <li>點擊導線可刪除；「復原」可還原上一步。</li>
+          <li>完成後將 NFB 切到 ON，按輸入按鈕測試。</li>
+        </ol>
+        <p>手機上可用下方按鈕縮放工作板，避免端子太小。</p>
+        <button class="primary large" data-close-help type="button">開始操作</button>
+      </section>
+    </div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
